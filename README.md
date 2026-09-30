@@ -44,25 +44,35 @@ export default defineConfig({
 
 A plugin uses the module as `semiclip`, without an import line: the build adds the import to the plugins that use it, and builds the module only when some plugin does.
 
-Teammates walk through each other, and a ghost walks through everyone alive - `ghost` being a [field on `Player`](https://amxts.github.io/docs/game/players#shared-player-fields) any plugin can set:
+Teammates walk through each other:
+
+```ts
+semiclip.rule = (player, target) => player.team == target.team;
+```
+
+Setting the rule is all it takes: the module works every pair out, and works a player's pairs out again when he spawns, dies, changes sides, comes or leaves. Setting `rule` takes the rules over from ReSemiclip's config; `semiclip.rule = null` gives them back, and so does the plugins' reload or a map change until a rule is set again.
+
+### A rule that changes in play
+
+`spawnProtected` below is the plugin's own [field on `Player`](https://amxts.github.io/docs/game/players#shared-player-fields), declared with `declare module`: it starts `false`, every plugin on the server reads and writes it, and it is cleared when the player leaves. A player who has just spawned walks through everyone alive for 3 seconds, and teammates walk through each other:
 
 ```ts
 declare module "~/facade" {
 	interface Player {
-		ghost: boolean;
+		spawnProtected: boolean;
 	}
 }
 
 semiclip.rule = (player, target) =>
-	player.isAlive && target.isAlive && (player.ghost || target.ghost || player.team == target.team);
+	player.isAlive && target.isAlive && (player.spawnProtected || target.spawnProtected || player.team == target.team);
 
-server.addCommand("/ghost", (player) => {
-	player.ghost = !player.ghost;
-	print(player, player.ghost ? "!gGhost mode on" : "!rGhost mode off");
+game.addEventListener("spawn", ({ player }) => {
+	player.spawnProtected = true;                        // walks through everyone for 3 seconds
+	setTimeout(() => (player.spawnProtected = false), 3000);
 });
 ```
 
-Nothing else is needed: the module hears `ghost` change, and the spawns, deaths, team changes and players leaving the rule reads. Setting `rule` takes the rules over from ReSemiclip's config; `semiclip.rule = null` gives them back, and so does the plugins' reload or a map change until a rule is set again.
+The module works the pairs out again by itself when the field changes - on the spawn, and when the timer clears it - with no `update()` call.
 
 ### When the pairs are worked out
 
@@ -91,11 +101,11 @@ server.addCommand("/party", () => {
 
 ### Both ways
 
-`rule(player, target)` says whether `player` walks through `target`. ReSemiclip lets two players through each other only when both ways say so, so a rule that says yes one way and no the other keeps that pair solid. A rule that reads the same both ways - `player.team == target.team`, `player.ghost || target.ghost` - is what makes a pair pass.
+`rule(player, target)` says whether `player` walks through `target`. ReSemiclip lets two players through each other only when both ways say so, so a rule that says yes one way and no the other keeps that pair solid. A rule that reads the same both ways - `player.team == target.team`, `player.spawnProtected || target.spawnProtected` - is what makes a pair pass.
 
 ### One rule
 
-The rule is one for the server. A plugin that sets it over another plugin's replaces it, and the console warns: the last one set is used. Plugins that each have a say write it into fields (`player.ghost`) that one rule reads.
+The rule is one for the server. A plugin that sets it over another plugin's replaces it, and the console warns: the last one set is used. Plugins that each have a say write it into fields (`player.spawnProtected`) that one rule reads.
 
 ### Without ReSemiclip on the server
 

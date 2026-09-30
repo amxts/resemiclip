@@ -1,7 +1,8 @@
-// ReSemiclip on the fake server: the playground's Ghosts plugin sets a rule -
-// teammates walk through each other, a ghost through everyone alive - and the
-// module works the pairs out, again whenever something the rule reads
-// changes. Its masks are what the ReSemiclip module is told.
+// ReSemiclip on the fake server: the playground's spawn protection plugin sets
+// a rule - teammates walk through each other, a player just spawned through
+// everyone alive for 3 seconds - and the module works the pairs out, again
+// whenever something the rule reads changes. Its masks are what the ReSemiclip
+// module is told.
 import { describe, expect, setDefaultTimeout, test } from "bun:test";
 import { setup } from "@amxts/core/test-utils";
 
@@ -32,13 +33,15 @@ describe("resemiclip", () => {
 		const bob = server.join("Bob");
 		const carl = server.join("Carl", { team: "TERRORIST" });
 
-		// A field: the ghost walks through everyone alive, and everyone through him.
-		carl.say("/ghost");
+		// A field: a player just spawned walks through everyone alive, and
+		// everyone through him, until the timer takes his protection off.
+		server.fireHook("spawn", [carl.id]);
 		expect(server.semiclipMasks.get(carl.id)).toBe(bits(alice.id, bob.id));
 		expect(server.semiclipMasks.get(alice.id)).toBe(bits(bob.id, carl.id));
 
-		carl.say("/ghost");
+		server.advance(3000);
 		expect(server.semiclipMasks.get(carl.id)).toBe(0);
+		expect(server.semiclipMasks.get(alice.id)).toBe(bits(bob.id));
 
 		// A team: the game tells everyone with TeamInfo.
 		bob.team = "TERRORIST";
@@ -46,13 +49,16 @@ describe("resemiclip", () => {
 		expect(server.semiclipMasks.get(bob.id)).toBe(bits(carl.id));
 		expect(server.semiclipMasks.get(alice.id)).toBe(0);
 
-		// A death and a spawn.
+		// A death and a spawn, which protects him again.
 		carl.alive = false;
 		server.fireHook("killed", [carl.id, 0, 0]);
 		expect(server.semiclipMasks.get(bob.id)).toBe(0);
 		carl.alive = true;
 		server.fireHook("spawn", [carl.id]);
 		expect(server.semiclipMasks.get(bob.id)).toBe(bits(carl.id));
+		expect(server.semiclipMasks.get(alice.id)).toBe(bits(carl.id));
+		server.advance(3000);
+		expect(server.semiclipMasks.get(alice.id)).toBe(0);
 
 		// Leaving: nobody walks through the slot the next player takes.
 		carl.disconnect();
@@ -86,7 +92,8 @@ describe("resemiclip", () => {
 		const server = await setup({ rootDir: "playground", modules: ["reapi"] });
 		const alice = server.join("Alice");
 
-		alice.say("/ghost");
+		server.fireHook("spawn", [alice.id]);
+		server.advance(3000);
 		alice.say("/through");
 
 		expect(server.semiclipControlled).toBe(false);
