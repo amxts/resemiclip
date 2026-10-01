@@ -57,7 +57,7 @@ semiclip.rule = (player, target) => player.team == target.team;
 `spawnProtected` ниже — собственное [поле плагина в `Player`](https://amxts.github.io/ru/docs/game/players#общие-поля-игрока), объявленное через `declare module`: сначала оно `false`, его читают и пишут все плагины сервера, а когда игрок уходит, оно сбрасывается. Только что появившийся игрок 3 секунды проходит сквозь всех живых, а союзники — сквозь друг друга:
 
 ```ts
-declare module "~/facade" {
+declare module "@amxts/core" {
 	interface Player {
 		spawnProtected: boolean;
 	}

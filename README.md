@@ -57,7 +57,7 @@ Setting the rule is all it takes: the module works every pair out, and works a p
 `spawnProtected` below is the plugin's own [field on `Player`](https://amxts.github.io/docs/game/players#shared-player-fields), declared with `declare module`: it starts `false`, every plugin on the server reads and writes it, and it is cleared when the player leaves. A player who has just spawned walks through everyone alive for 3 seconds, and teammates walk through each other:
 
 ```ts
-declare module "~/facade" {
+declare module "@amxts/core" {
 	interface Player {
 		spawnProtected: boolean;
 	}

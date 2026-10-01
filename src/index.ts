@@ -5,8 +5,8 @@
  * rule reads may have changed. How to use it: README.md.
  */
 import { ClientPutinserverEvent, Player, TeamInfoMessage, game, server } from "@amxts/core";
-import { LibType_Library } from "~/constants";
-import { LibraryExists, resemiclip_get_user_mask, resemiclip_set_user_mask, resemiclip_take_control } from "~/natives";
+import { LibType_Library } from "@amxts/core/constants";
+import { LibraryExists, resemiclip_get_user_mask, resemiclip_set_user_mask, resemiclip_take_control } from "@amxts/core/natives";
 
 export default defineModule({
 	meta: { name: "resemiclip" },

@@ -1,6 +1,6 @@
 plugin({ name: "Spawn protection", version: "0.1.0", author: "kukson777", description: "Tries ReSemiclip out: teammates walk through each other, and a player just spawned through everyone alive for 3 seconds" });
 
-declare module "~/facade" {
+declare module "@amxts/core" {
 	interface Player {
 		spawnProtected: boolean;
 	}
