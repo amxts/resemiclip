@@ -13,7 +13,7 @@ game.addEventListener("spawn", ({ player }) => {
 	setTimeout(() => (player.spawnProtected = false), 3000);
 });
 
-server.addCommand("/through", list);
+server.addCommand("/through", ({ player }) => list(player));
 
 function list(player: Player) {
 	const names = semiclip.passesThrough(player).map(other => other.name);
