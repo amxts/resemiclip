@@ -95,7 +95,7 @@ export class Semiclip {
 	 */
 	passesThrough(player: Player) {
 		const mask = loaded() ? resemiclip_get_user_mask(player.id) : 0;
-		return Player.all().filter(other => other.id != player.id && (mask & bitOf(other)) != 0);
+		return server.players.filter(other => other.id != player.id && (mask & bitOf(other)) != 0);
 	}
 }
 
@@ -142,18 +142,18 @@ function changed(player: Player) {
 function left(player: Player) {
 	masks.delete(player.id);
 	if (activeRule() == null) return;
-	for (const other of Player.all()) {
+	for (const other of server.players) {
 		if (other.id != player.id) tell(other, withBit(maskOf(other), player, false));
 	}
 }
 
 function updateAll(rule: SemiclipRule) {
-	const players = Player.all();
+	const players = server.players;
 	for (const player of players) tell(player, maskFor(players.filter(other => other.id != player.id && rule(player, other))));
 }
 
 function updatePlayer(player: Player, rule: SemiclipRule) {
-	const others = Player.all().filter(other => other.id != player.id);
+	const others = server.players.filter(other => other.id != player.id);
 	tell(player, maskFor(others.filter(other => rule(player, other))));
 	for (const other of others) tell(other, withBit(maskOf(other), player, rule(other, player)));
 }
