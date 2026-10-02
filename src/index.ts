@@ -15,7 +15,7 @@ export default defineModule({
 		server.addEventListener("init", start);
 		server.addEventListener("putinserver", joined);
 		server.addEventListener("disconnected", event => left(event.player));
-		server.addEventListener("message:TeamInfo", teamChanged);
+		server.addMessageListener("team", teamChanged);
 		server.addEventListener("playerchange", event => changed(event.player));
 		game.addEventListener("spawn", event => changed(event.player), true);
 		game.addEventListener("killed", event => changed(event.player), true);
