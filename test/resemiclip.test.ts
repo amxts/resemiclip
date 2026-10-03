@@ -88,6 +88,21 @@ describe("resemiclip", () => {
 		expect(server.semiclipControlled).toBe(false);
 	});
 
+	test("the plugin that set the rule stops: ReSemiclip has the rules back; loaded again, it sets the rule once more", async () => {
+		const server = await setup({ rootDir: "playground" });
+		const alice = server.join("Alice");
+		const bob = server.join("Bob");
+		const protection = server.plugins.find(plugin => plugin.source.endsWith("spawn-protection.ts"))!;
+
+		server.unload(protection);
+		expect(server.semiclipControlled).toBe(false);
+
+		await server.load(protection.source);
+		expect(server.semiclipControlled).toBe(true);
+		expect(server.semiclipMasks.get(alice.id)).toBe(bits(bob.id));
+		expect(server.log).not.toContain("a rule was set over another one");
+	});
+
 	test("without the ReSemiclip module, one line in the console and nothing else", async () => {
 		const server = await setup({ rootDir: "playground", modules: ["reapi"] });
 		const alice = server.join("Alice");
