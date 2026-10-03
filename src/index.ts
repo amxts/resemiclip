@@ -13,10 +13,10 @@ export default defineModule({
 	imports: [{ from: "@amxts/resemiclip", name: "semiclip" }],
 	setup() {
 		server.addEventListener("init", start);
-		server.addEventListener("putinserver", joined);
+		server.addEventListener("putInServer", joined);
 		server.addEventListener("disconnected", event => left(event.player));
 		server.addMessageListener("team", teamChanged);
-		server.addEventListener("playerchange", event => changed(event.player));
+		server.addEventListener("playerChange", event => changed(event.player));
 		game.addEventListener("spawn", event => changed(event.player), true);
 		game.addEventListener("killed", event => changed(event.player), true);
 	},
