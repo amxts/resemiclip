@@ -50,7 +50,7 @@ Teammates walk through each other:
 semiclip.rule = (player, target) => player.team == target.team;
 ```
 
-Setting the rule is all it takes: the module works every pair out, and works a player's pairs out again when he spawns, dies, changes sides, comes or leaves. Setting `rule` takes the rules over from ReSemiclip's config; `semiclip.rule = null` gives them back, and so does the plugins' reload or a map change until a rule is set again.
+Setting the rule is all it takes: the module works every pair out, and works a player's pairs out again when he spawns, dies, changes sides, comes or leaves. Setting `rule` takes the rules over from ReSemiclip's config; `semiclip.rule = null` gives them back, and so do the plugins' reload, a map change and the plugin that set the rule stopping - unloaded or reloaded - until a rule is set again.
 
 ### A rule that changes in play
 
