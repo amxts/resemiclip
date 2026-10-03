@@ -6,6 +6,7 @@
  */
 import { ClientPutinserverEvent, Player, TeamInfoMessage, game, server } from "@amxts/core";
 import { LibType_Library } from "@amxts/core/constants";
+import { callingPlugin, onPluginStop } from "@amxts/core/kit";
 import { LibraryExists, resemiclip_get_user_mask, resemiclip_set_user_mask, resemiclip_take_control } from "@amxts/core/natives";
 
 export default defineModule({
@@ -19,6 +20,7 @@ export default defineModule({
 		server.addEventListener("playerChange", event => changed(event.player));
 		game.addEventListener("spawn", event => changed(event.player), true);
 		game.addEventListener("killed", event => changed(event.player), true);
+		onPluginStop(stopped);
 	},
 });
 
@@ -29,6 +31,8 @@ export default defineModule({
 export type SemiclipRule = (player: Player, target: Player) => boolean;
 
 let current: SemiclipRule | null = null;
+/** The plugin that set the rule, as `callingPlugin()` numbers it. */
+let currentFrom = 0;
 
 /** The server is up. A rule set while the plugins are still loading waits for it. */
 let started = false;
@@ -73,6 +77,7 @@ export class Semiclip {
 	set rule(rule: SemiclipRule | null) {
 		if (rule != null && current != null && rule != current) console.warn("[ReSemiclip] a rule was set over another one: the last one set is used");
 		current = rule;
+		currentFrom = callingPlugin();
 		if (started) apply();
 	}
 
@@ -101,6 +106,13 @@ export class Semiclip {
 
 /** Who walks through whom: the rule, the pairs worked out again, and what ReSemiclip has. */
 export const semiclip = new Semiclip();
+
+/** The plugin that set the rule stopped: its rule goes, and ReSemiclip has the rules back until a rule is set again. */
+function stopped(plugin: number) {
+	if (current == null || currentFrom != plugin) return;
+	current = null;
+	if (started) apply();
+}
 
 function start() {
 	started = true;
