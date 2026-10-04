@@ -1,7 +1,7 @@
 {
 	"name": "@amxts/resemiclip",
 	"type": "module",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "Who walks through whom, for amxts plugins: the ReSemiclip module's rules as players, not bit masks.",
 	"author": {
 		"name": "kukson777",
