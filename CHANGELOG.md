@@ -1,0 +1,43 @@
+# Changelog
+
+## v0.2.0
+
+[compare changes](https://github.com/amxts/resemiclip/compare/v0.1.0...v0.2.0)
+
+### Summary
+
+resemiclip for amxts 0.2.0. Its API is unchanged; the rule a plugin sets goes when that plugin stops, so ReSemiclip gets its own rules back.
+
+### ⚠️ Breaking changes
+
+None in resemiclip itself; it needs `@amxts/core` 0.2.
+
+### ⬆️ Upgrade guide
+
+`npx amxts upgrade` in the project updates it with the core.
+
+### 📦 Dependencies
+
+| Package | From | To |
+| --- | --- | --- |
+| `@amxts/core` | `^0.1.0` | `^0.2.0` |
+
+### 🩹 Fixes
+
+- Give the rules back when the plugin that set the rule stops ([62e06a8](https://github.com/amxts/resemiclip/commit/62e06a8))
+
+### 💅 Refactors
+
+- Import the core's API by its package name ([4024ec5](https://github.com/amxts/resemiclip/commit/4024ec5))
+- Command handlers take one object ([16b55d1](https://github.com/amxts/resemiclip/commit/16b55d1))
+- `server.players` over `Player.all` ([ab12133](https://github.com/amxts/resemiclip/commit/ab12133))
+- Listen to the team message by its new name ([c8a31d9](https://github.com/amxts/resemiclip/commit/c8a31d9))
+- Hear `putInServer` and `playerChange` by their new names ([9b407b7](https://github.com/amxts/resemiclip/commit/9b407b7))
+
+### 📖 Documentation
+
+- The rule goes with the plugin that set it ([7a4ce5b](https://github.com/amxts/resemiclip/commit/7a4ce5b))
+
+### ❤️ Contributors
+
+- Ernest Manukyan
