@@ -40,4 +40,4 @@ None in resemiclip itself; it needs `@amxts/core` 0.2.
 
 ### ❤️ Contributors
 
-- Ernest Manukyan
+- Ernest Manukyan ([@kukson777](https://github.com/kukson777))
