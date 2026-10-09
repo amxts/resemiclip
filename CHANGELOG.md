@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.3
+
+[compare changes](https://github.com/amxts/resemiclip/compare/v0.1.2...v0.1.3)
+
+### Summary
+
+Runs on amxts 0.2 and 0.3: `@amxts/core` `^0.2.2 || ^0.3.0`. Nothing else changed; its prebuilt plugin is 0.3's, and a 0.2 project compiles it once.
+
+### 📖 Documentation
+
+
+### ❤️ Contributors
+
+- Ernest Manukyan ([@kukson777](https://github.com/kukson777))
+
 ## v0.1.2
 
 [compare changes](https://github.com/amxts/resemiclip/compare/v0.1.1...v0.1.2)
